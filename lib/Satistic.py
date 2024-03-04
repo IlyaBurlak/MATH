@@ -139,6 +139,18 @@ class StatisticsCalculator:
 
         return kurtosis
 
+    def calculate_within_3_sigma(self):
+        mean = np.mean(self.data)
+        std_dev = np.std(self.data)
+
+        lower_bound = mean - 3 * std_dev
+        upper_bound = mean + 3 * std_dev
+
+        within_3_sigma = [num for num in self.data if lower_bound <= num <= upper_bound]
+        percentage_within_3_sigma = len(within_3_sigma) / len(self.data) * 100
+
+        print(f"\nПроцент значений в пределах 3 стандартных отклонений: {percentage_within_3_sigma:.2f}%")
+
     def calculate_empirical_distribution_function(self):
         sorted_data = sorted(self.data)
         n = len(self.data)
@@ -163,13 +175,13 @@ class StatisticsCalculator:
         plt.step(x_unique, edf, where='post', linewidth=2)
         plt.xlabel('Значения данных')
         plt.ylabel('Эмпирическая функция распределения')
-        plt.title('График эмпирической функции распределения')
+        plt.title('График эмпирической функции распределения (Дискретная)')
         plt.grid(True)
         plt.show()
 
     def plot_relative_freq_histogram_and_polygon(self):
         plt.bar(list(self.midpoints.values()), list(self.relative_frequency.values()), width=self.interval_width,
-                linewidth=2, alpha=0.7, label='Гистограмма относительной частоты')
+                linewidth=2, alpha=1, label='Гистограмма относительной частоты')
 
         plt.plot(list(self.midpoints.values()), list(self.relative_frequency.values()), marker='o',
                  color='r', linestyle='-', linewidth=2, label='Полигон относительной частоты')
@@ -195,6 +207,10 @@ class StatisticsCalculator:
         plt.bar(list(self.midpoints.values()), probabilities, width=self.interval_width,
                 alpha=0.7, label='Вероятность попадания в интервал')
 
+        print("\n")
+        for idx, prob in enumerate(probabilities):
+            print(f'Интервал {list(self.midpoints.keys())[idx]}: Вероятность = {prob}')
+
         # Calculate mean and standard deviation for the normal curve
         mean = np.mean(self.data)
         std_dev = np.std(self.data)
@@ -210,6 +226,8 @@ class StatisticsCalculator:
         plt.legend()
         plt.grid(True)
         plt.show()
+
+
 
 
 
@@ -258,6 +276,7 @@ calc.calculate_empirical_distribution_function()
 calc.print_cumulative_freq()
 calc.print_relative_freq()
 calc.print_relative_freq_density()
+calc.calculate_within_3_sigma()
 
 # Plottin
 calc.plot_empirical_distribution_function()
