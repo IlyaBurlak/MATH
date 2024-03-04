@@ -1,4 +1,6 @@
 from collections import Counter
+from math import erf
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -227,6 +229,45 @@ class StatisticsCalculator:
         plt.show()
 
 
+    def plot_empirical_and_theoretical_distribution_functions(self):
+        x_unique, edf = self.calculate_empirical_distribution_function()
+        data, tdf = self.calculate_theoretical_distribution_function()
+
+        plt.step(x_unique, edf, where='post', linewidth=2, label='Эмпирическая функция распределения (EFР)')
+        plt.plot(data, tdf, label='Теоретическая функция распределения (TFP)', color='r', linestyle='--')
+
+        plt.xlabel('Значения данных')
+        plt.ylabel('Вероятность')
+        plt.title('Эмпирическая vs Теоретическая функции распределения')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+
+
+    def calculate_theoretical_distribution_function(self, distribution_type='normal'):
+        if distribution_type == 'normal':
+            mean = np.mean(self.data)
+            std_dev = np.std(self.data)
+
+            x_values = np.linspace(self.data_min, self.data_max, self.num_intervals * 10)  # генерируем больше точек для более плавной кривой
+            if self.num_intervals == 1:
+                # Для данных с только одним уникальным значением нельзя создать кривую распределения
+                return None, None
+
+            tdf = []
+            for x in x_values:
+                if std_dev != 0:
+                    tdf_val = 0.5 * (1 + erf((x - mean) / (std_dev * np.sqrt(2))))
+                else:
+                    tdf_val = 0.0
+                tdf.append(tdf_val)
+
+            return x_values, tdf
+        else:
+            return None, None
+
+
+
 
 
 
@@ -281,3 +322,4 @@ calc.calculate_within_3_sigma()
 calc.plot_empirical_distribution_function()
 calc.plot_relative_freq_histogram_and_polygon()
 calc.plot_relative_freq_density_histogram_with_probabilities()
+calc.plot_empirical_and_theoretical_distribution_functions()
