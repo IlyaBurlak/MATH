@@ -1,6 +1,5 @@
 from collections import Counter
 import matplotlib.pyplot as plt
-from math import sqrt
 import numpy as np
 
 
@@ -196,14 +195,14 @@ class StatisticsCalculator:
     def plot_relative_freq_density_histogram_with_probabilities(self):
         plt.figure(figsize=(12, 6))
 
-        # Plot relative freq density as the main histogram
+        # Отобразить относительную плотность частот в качестве основной гистограммы
         plt.bar(list(self.midpoints.values()), list(self.relative_freq_density.values()), width=self.interval_width,
                 linewidth=2, label='Относительная плотность частот')
 
-        # Calculate probabilities for each interval
+        # Рассчитать вероятности для каждого интервала
         probabilities = [freq * self.interval_width for freq in self.relative_freq_density.values()]
 
-        # Plot second histogram with probabilities
+        # Постройте вторую гистограмму с вероятностями
         plt.bar(list(self.midpoints.values()), probabilities, width=self.interval_width,
                 alpha=0.7, label='Вероятность попадания в интервал')
 
@@ -211,11 +210,11 @@ class StatisticsCalculator:
         for idx, prob in enumerate(probabilities):
             print(f'Интервал {list(self.midpoints.keys())[idx]}: Вероятность = {prob}')
 
-        # Calculate mean and standard deviation for the normal curve
+        # Рассчитать среднее и стандартное отклонение для нормальной кривой
         mean = np.mean(self.data)
         std_dev = np.std(self.data)
 
-        # Plot the normal curve on the same graph
+        # Постройте нормальную кривую на том же графике
         x = np.linspace(self.data_min, self.data_max, 100)
         y = 1 / (std_dev * np.sqrt(2 * np.pi)) * np.exp(-0.5 * ((x - mean) / std_dev) ** 2)
         plt.plot(x, y, label='Нормальное распределение', color='r', linestyle='--')
