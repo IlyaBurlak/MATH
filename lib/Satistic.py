@@ -167,6 +167,56 @@ class StatisticsCalculator:
         plt.grid(True)
         plt.show()
 
+    def plot_relative_freq_histogram_and_polygon(self):
+        plt.bar(list(self.midpoints.values()), list(self.relative_frequency.values()), width=self.interval_width,
+                linewidth=2, alpha=0.7, label='Гистограмма относительной частоты')
+
+        plt.plot(list(self.midpoints.values()), list(self.relative_frequency.values()), marker='o',
+                 color='r', linestyle='-', linewidth=2, label='Полигон относительной частоты')
+
+        plt.xlabel('Средние значения интервалов')
+        plt.ylabel('Относительная частота')
+        plt.title('Гистограмма и полигон относительной частоты')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+
+    def plot_relative_freq_density_histogram_with_probabilities(self):
+        plt.figure(figsize=(12, 6))
+
+        # Plot relative freq density as the main histogram
+        plt.bar(list(self.midpoints.values()), list(self.relative_freq_density.values()), width=self.interval_width,
+                linewidth=2, label='Относительная плотность частот')
+
+        # Calculate probabilities for each interval
+        probabilities = [freq * self.interval_width for freq in self.relative_freq_density.values()]
+
+        # Plot second histogram with probabilities
+        plt.bar(list(self.midpoints.values()), probabilities, width=self.interval_width,
+                alpha=0.7, label='Вероятность попадания в интервал')
+
+        # Calculate mean and standard deviation for the normal curve
+        mean = np.mean(self.data)
+        std_dev = np.std(self.data)
+
+        # Plot the normal curve on the same graph
+        x = np.linspace(self.data_min, self.data_max, 100)
+        y = 1 / (std_dev * np.sqrt(2 * np.pi)) * np.exp(-0.5 * ((x - mean) / std_dev) ** 2)
+        plt.plot(x, y, label='Нормальное распределение', color='r', linestyle='--')
+
+        plt.xlabel('Средние значения интервалов')
+        plt.ylabel('Плотность относительной частоты / Вероятность')
+        plt.title('Гистограмма плотности относительной частоты и вероятности попадания в интервалы')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+
+
+
+
+
+
+
 
 # Usage
 data = [6.75, 6.77, 6.77, 6.73, 6.76, 6.74, 6.7, 6.75, 6.71, 6.72,
@@ -209,7 +259,7 @@ calc.print_cumulative_freq()
 calc.print_relative_freq()
 calc.print_relative_freq_density()
 
-# Plotting
-calc.plot_relative_freq_histogram()
-calc.plot_relative_freq_density_histogram()
+# Plottin
 calc.plot_empirical_distribution_function()
+calc.plot_relative_freq_histogram_and_polygon()
+calc.plot_relative_freq_density_histogram_with_probabilities()
