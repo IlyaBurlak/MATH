@@ -210,6 +210,10 @@ class StatisticsCalculator:
 
         print("\n")
         for idx, prob in enumerate(probabilities):
+            plt.text(list(self.midpoints.values())[idx], list(self.relative_freq_density.values())[idx] + prob / 2,
+                     f' {prob:.3f}', ha='center', va='center')
+
+        for idx, prob in enumerate(probabilities):
             print(f'Интервал {list(self.midpoints.keys())[idx]}: Вероятность = {prob}')
 
         # Рассчитать среднее и стандартное отклонение для нормальной кривой
